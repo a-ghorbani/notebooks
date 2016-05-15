@@ -21,6 +21,32 @@ The size of blocks for a disks are 512 byes, for FS usually around ~few KB, wher
 
 TODO: add some notes on Hadoop HA (high availability), QJM (quorum journal manager) and failover and fencing.
 
+#### Usefull commands
+* hadoop fs -cat URI
+* hadoop fs -checksum URI
+* hadoop fs -copyFromLocal <localsrc> URI
+* hadoop fs -copyToLocal [-ignorecrc] [-crc] URI <localdst>
+* hadoop fs -count [-q] [-h] [-v] <paths>     (Count the number of directories, files and bytes under the paths that match the specified file pattern. )
+* hadoop fs -df [-h] URI [URI ...]
+* hadoop fs -du [-s] [-h] URI [URI ...]
+* hadoop fs -find <path> ... <expression> ...
+* hadoop fs -ls [-d] [-h] [-R] <args>
+* hadoop fs -put <localsrc> ... <dst>
+* hadoop fs -get [-ignorecrc] [-crc] <src> <localdst>
+* hadoop fs -test -[defsz] URI
+  * -d: f the path is a directory, return 0.
+  * -e: if the path exists, return 0.
+  * -f: if the path is a file, return 0.
+  * -s: if the path is not empty, return 0.
+  * -z: if the file is zero length, return 0.
+
+For more commands and explanation look [here](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html).
+
+NOTE: **`hadoop fs` vs `hadoop dfs` vs `hdfs dfs`**: (from [here](http://stackoverflow.com/questions/18142960/whats-the-difference-between-hadoop-fs-shell-commands-and-hdfs-dfs-shell-co/24404136#24404136))
+* **`hadoop fs <args>`** : `fs` relates to a generic file system (i.e. Local FS, HFTP FS, S3 FS). 
+* **`hadoop dfs <args>`** :  `dfs` is very specific to HDFS (this command depricated, instead use `hdfs dfs`). 
+* **`hdfs dfs <args>`** : specific to HDFS.
+
 ### MapReduce-1 daemons
 * daemons running on Master nodes:
   * **JobTracker**: scheduling tasks to run on TaskTrackers. Task progress monitoring (e.g. handling failed tasks).
@@ -65,4 +91,15 @@ or `org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySch
   * Preemption:
   * Delay scheduling:
   * Dominant Resource Faiarness:
+
+## Hadoop IO
+
+### Integrity 
+
+* **In HDFS**: HDFS uses CRC-32C for checksum. DataNodes are responsible for checksum verification.
+* **In `LocalFileSystem`**: Performs client-side checksumming. To disable checksumming use instead `RawLocalFileSystem`.
+* **In `ChecksumFileSystem`**: creates a checksum file for each raw file. It is just a wrapper around `FileSystem`.
+Use command `hadoop fs -checksum URI` to see the checksum of the given file.
+
+### Compression
 
