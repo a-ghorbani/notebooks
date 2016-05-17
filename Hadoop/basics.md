@@ -96,10 +96,61 @@ or `org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySch
 
 ### Integrity 
 
-* **In HDFS**: HDFS uses CRC-32C for checksum. DataNodes are responsible for checksum verification.
-* **In `LocalFileSystem`**: Performs client-side checksumming. To disable checksumming use instead `RawLocalFileSystem`.
-* **In `ChecksumFileSystem`**: creates a checksum file for each raw file. It is just a wrapper around `FileSystem`.
-Use command `hadoop fs -checksum URI` to see the checksum of the given file.
+* **HDFS**: HDFS uses CRC-32C for checksum. DataNodes are responsible for checksum verification.
+* **`LocalFileSystem`**: Performs client-side checksumming. To disable checksumming use instead `RawLocalFileSystem`.
+* **`ChecksumFileSystem`**: creates a checksum file for each raw file. It is just a wrapper around `FileSystem`.
+* Use command `hadoop fs -checksum URI` to see the checksum of the given file.
 
 ### Compression
+
+Pros:
+* reduces space
+* speeds up data transfer
+Cons:
+* time needed for compression and decompression
+
+| Compression format | Tool  | Algorithm | File extention | Splittable | Codec                                      |
+| ------------------ | ----- | --------- | -------------- | ---------- | ------------------------------------------ |
+| DEFLATE            | N/A   | DEFLATE   | .deflate       | No         | org.apache.hadoop.io.compress.DeflateCodec |
+| gzip               | gzip  | DEFLATE   | .gz            | No         | org.apache.hadoop.io.compress.GzipCodec    |
+| bzip2              | bizp2 | bzip2     | .bz2           | YES        | org.apache.hadoop.io.compress.BZip2Codec   |
+| LZO                | lzop  | LZO       | .lzo           | if indexed | com.hadoop.compression.lzo.LzopCodec       |
+| LZ4                | N/A   | LZ4       | .lz4           | NO         | org.apache.hadoop.io.compress.Lz4Codec     |
+| Snappy             | N/A   | Snappy    | .snappy        | No         | org.apache.hadoop.io.compress.SnappyCodec  |
+
+NOTE: If compression is not splittable then in a MR task the whole file should be processed with one MR-task.
+
+Suggestions on compression format, in order of effectivness:
+* Using container file fomrmats like: sequence files, Avro, ORCFiles, Parquet. Use conpressors like LZO, LZ4, or Snappy as splitability is not a factor here.
+* Compressors that supports splitting, like bzip2 or LZO with indexing.
+* Split the files in chunks, and copress the chunks separately using any compression, also if is not splittable.
+* Store the file uncompressed.
+
+### Serialization
+
+Hadoop uses `Writable` for serialization.
+
+One of the advantages of `Writable` over `java.io.Serializable` is that in `Writable` the expected class is known and therefore for some opperatin in MR like soriting it does not need to deserialize the object.
+
+| Java primitive | Writable implementation	| Serialized size (bytes) |
+| -------------- | ----------------------- | ----------------------- |
+| boolean	       | BooleanWritable	        | 1                       |
+| byte	          | ByteWritable	           | 1                       |
+| short	         | ShortWritable	          | 2                       |
+| int	           | IntWritable	            | 4                       |
+| 	              | VIntWritable	           | 1–5                     |
+| float	         | FloatWritable	          | 4                       |
+| long	          | LongWritable	           | 8                       |
+| 	              | VLongWritable	          | 1–9                     |
+| double	        | DoubleWritable	         | 8                       |
+
+### Persistent data structure
+| Data structure | Type	                | Orientation  | Note |
+| -------------- | -------------------- | -----------  | ----------------------- |
+| SequenceFile	  | Binary key/value	    | row | Variants: *Uncompressed* format, *Record Compressed* format and *Block-Compressed* |
+| MapFile	       | Sorted SequenceFile  | row | Variants: `SetFile`, `ArrayFile` and `BloomMapFile` |
+| Avro	          | Binary data serialization | row    | portable across differnt programming languages |
+| ORCFile        | | column | |
+| Parquet        | | column | based on google's Dremel|
+
 
