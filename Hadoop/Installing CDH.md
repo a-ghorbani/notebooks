@@ -23,5 +23,8 @@ and also for the hostname use `echo $HOSTNAME`
 # Notes
 
 To run commands under another user, use for example for oozie as:
-sudo -H -u oozie bash -c 'echo "I am $USER, with uid $UID"'
+
+```bash
+sudo -H -u oozie bash -c 'echo "I am $USER, with uid $UID"' 
+```
 
