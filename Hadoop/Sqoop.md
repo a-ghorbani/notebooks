@@ -59,13 +59,30 @@ Direct modes are usuaslly much for faster than JDBC.
 In a few ways it can be done.
 
 One way:
+
 1. Import to hdfs the usual way:
-...`sqoop import -m 1 --table tablename --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"`
+
+   ```bash 
+   sqoop import -m 1 --table tablename --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"
+   ```
 2. Create table in Hive:
-...`sqoop create-hive-table --table tablename --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********" --fields-terminated-by ','`
+
+   ```bash
+   sqoop create-hive-table --table tablename \
+   --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********" --fields-terminated-by ','
+   ```
 3. Load data into Hive:
-...`hive> LOAD DATA INPATH "tablename" INTO TABLE tablename`
+
+   ```bash
+   %> hive
+   hive> LOAD DATA INPATH "tablename" INTO TABLE tablename
+   ```
 
 Another way, using sqoop for data loading:
-`sqoop import -m 1 --hive-import --table tablename --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"`
+
+```bash
+sqoop import -m 1 --hive-import --table tablename \
+--connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"
+```
+
 
