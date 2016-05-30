@@ -85,4 +85,19 @@ sqoop import -m 1 --hive-import --table tablename \
 --connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"
 ```
 
+## Export
+
+```bash
+%> mysql
+mysql> CREATE TABLE tablename_in_db (col1 INTEGER, col2 varchar(200));
+
+%> sqoop export -m 1 --table tablename_in_db \
+--export-dir /user/hive/warehouse/data_in_hive \
+--input-fields-terminated-by '\0001' \
+--connect "jdbc:mysql://host:3306/dbname?user=****&password=*********"
+```
+
+Direct strategy still can be used.
+For example in case of MySql, Sqoop will use `mysqlimport`.
+
 
