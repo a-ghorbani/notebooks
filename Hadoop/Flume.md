@@ -46,7 +46,7 @@ agent1.channels.channel1.type = file
 
 * Source: spool directory
 * Channel: file
-* sink: logger
+* sink: HDFS
 
 ```
 agent1.sources = source1
@@ -69,5 +69,38 @@ agent1.sinks.sink1.hdfs.inUsePrefix = _
 agent1.sinks.sink1.hdfs.fileType = DataStream
 
 # Define a file channel
-agent1.channels.channel1.type = file
+a1.channels.channel1.type = file
 ```
+### Store data in partitions
+
+```
+agent.sinks.sink1.hdfs.path=/path/to/dir/year=%Y/month=%m/hay=%d
+```
+
+### Interceptors
+
+An interceptor can modify or even drop events based on any criteria chosen.
+
+```
+a1.sources.r1.interceptors = i1 i2
+a1.sources.r1.interceptors.i1.type = host
+a1.sources.r1.interceptors.i1.preserveExisting = false
+a1.sources.r1.interceptors.i1.hostHeader = hostname
+a1.sources.r1.interceptors.i2.type = timestamp
+```
+In the above example the hostname of the server and timestamp will be added to the events.
+
+### Fan out flow
+
+Fanning out means when the flow from one source to multiple channels.
+
+### Multiplexing
+
+Sending some vents to one channel and others to another channel.
+
+### Tiers
+
+ Tiers are intermediate aggregators.
+ Tiers can aggregate events from a group of nodes.
+ 
+ 
