@@ -71,5 +71,31 @@ myList.map(myMapFunction(2))
 
 ## Immutability
 
-`var` is user for mutable variable and `val` for immutable variables (indeed not variable).
-function arguments are val
+In Scala `var` is used to define mutable variable and `val` for immutable variables (indeed not variable ;) ).
+
+Function arguments are `val` by default.
+
+Scala collections systematically distinguish between mutable and immutable collections. 
+A mutable collection can be updated or extended in place. 
+Immutable collections, by contrast, never change.
+
+By default in scala environment immutable collections are loaded.
+For mutable collections you need to import them manually.
+
+If you want to use both mutable and immutable versions of collections,
+a useful conventionis to import just the package `collection.mutable`.
+
+```Scala
+import scala.collection.mutable
+
+val myImmutableSet = Set(1,2,3)
+val myMutableSet = mutable.Set(1,2,3)
+```
+
+> #### A balanced attitude for Scala programmers
+>     Prefer vals, immutable objects, and methods without side effects. 
+>     Reach for them first. Use vars, mutable objects, and methods with 
+>     side effects when you have a specific need and justification for them.
+
+> M Odersky, L Spoon, B Venners *"Programming in Scala"*, second edition, p. 98
+
