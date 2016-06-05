@@ -99,3 +99,4 @@ val myMutableSet = mutable.Set(1,2,3)
 
 > M Odersky, L Spoon, B Venners *"Programming in Scala"*, second edition, p. 98
 
+## Lazy evaluation
