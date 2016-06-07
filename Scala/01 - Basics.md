@@ -100,10 +100,47 @@ val myMutableSet = mutable.Set(1,2,3)
 > M Odersky, L Spoon, B Venners *"Programming in Scala"*, second edition, p. 98
 
 ## Lazy evaluation
-## Delimited continuations (since 2.8)
+
+You can declare a variable lazy with the `lazy` keyword.
+```Scala 
+val x = {println ("x defined as 1 ") ; 1}
+lazy val y = {println ("y defined as 2"); 2}
+
+println("The variables x and y were defined.")
+println(x)
+println(y) 
+
+// Output:
+//
+// x defined as 1 
+// The variables x and y were defined.
+// 1
+// y defined as 2
+// 2
+
+```
+
+get the point?
+
 ## Higher-order functions
-## Nested functions
+
+A higher-order function is a function that does at least one its input (arguments) or output is a function.
+
 ## Currying
+Scala also supports [Currying](https://en.wikipedia.org/wiki/Currying).
+
+Example:
+```Scala
+def myParameterizedMapFunction(a: Int)(x: Int) = x + a
+myList.map(myParameterizedMapFunction(2))
+```
+In the above example `myParameterizedMapFunction(2)` returns a function which is `x: Int => x + 2`.
+
 ## Pattern matching
+Scala allows to match on any sort of data with a first-match policy.
+
+```Scala
+```
+
 ## Algebraic data types (through "case classes")
 ## Tuples
