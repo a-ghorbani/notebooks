@@ -139,7 +139,22 @@ In the above example `myParameterizedMapFunction(2)` returns a function which is
 ## Pattern matching
 Scala allows to match on any sort of data with a first-match policy.
 
+Indeed, the Scala’s pattern matching in a very powerfull switch-case statement, that can cover different types of comparision, like numeric values, string values, types etc.
+
+A nice discussion [here](https://kerflyn.wordpress.com/2011/02/14/playing-with-scalas-pattern-matching/)
+
+Few examples:
 ```Scala
+def parseArgument(arg: String) = arg match {
+    case "-h" | "--help" => println("Heeeeeelp!")
+    case "-v" | "--version" => println("supversion")
+    case whatever => println("O_O You typed: " + whatever)
+  }
+  
+def fact(n: Int): Int = n match {
+    case 0 => 1
+    case m => m * fact(m - 1)
+  }
 ```
 
 ## Algebraic data types (through "case classes")
