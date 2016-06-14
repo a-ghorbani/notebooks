@@ -161,8 +161,8 @@ def fact(n: Int): Int = n match {
 
 Algebraic data types are modelling data in two pattern:
 
-* **or** or **sum** type
-* **and** or **product** type
+* *or* or *sum* type
+* *and* or *product* type
 
 Example:
 ```Scala
