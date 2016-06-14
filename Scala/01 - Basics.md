@@ -157,7 +157,7 @@ def fact(n: Int): Int = n match {
   }
 ```
 
-## Algebraic data types (through "case classes")
+## Algebraic data types
 
 Algebraic data types are modelling data in two pattern:
 
