@@ -158,4 +158,43 @@ def fact(n: Int): Int = n match {
 ```
 
 ## Algebraic data types (through "case classes")
+
+Algebraic data types are modelling data in two pattern:
+
+* **or** or **sum** type
+* **and** or **product** type
+
+Example:
+```Scala
+sealed trait SumADT
+final case class type1(a: Int) extends SumADT
+final case class type2(a: Int, b: String) extends SumADT
+
+// example of AlgDT in pattern matching
+
+val aSumADT: SumADT = aFunctionThatReturnsSumADT()
+
+aSumADT match {
+  case type1(a)   => doSomeThing(a)
+  case type2(a,b) => doSomeThing(a,b)
+}
+```
+In the above example `SumADT` is a **sum type** with possible types of `type1` and `type2`.
+And `type2` is a **product type** of `Int` and `String`.
+
+There is a good explanation of AlgDT [here](http://noelwelsh.com/programming/2015/06/02/everything-about-sealed/)
 ## Tuples
+For examples see [here](http://www.tutorialspoint.com/scala/scala_tuples.htm)
+
+Scala tuple combines a fixed number of items together so that they can be passed around as a whole.
+
+```Scala
+// define a tuple
+val t = (1, "hello", Console)
+
+// access tuple's item
+println(t._1 + t._2 + t._3 )
+
+// iterate over items
+t.productIterator.foreach{ i =>println("Value = " + i )}
+```
