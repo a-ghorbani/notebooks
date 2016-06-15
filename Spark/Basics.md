@@ -18,26 +18,27 @@ object Main {
     if (args.length != 2) println(usage)
     val arglist = args.toList
     type OptionMap = Map[Symbol, Any]
-    def nextOption(map : OptionMap, list: List[String]) : OptionMap = {
+    def parseOption(map : OptionMap, list: List[String]) : OptionMap = {
       def isSwitch(s : String) = (s(0) == '-')
       list match {
         case Nil => map
-        case "--input" :: value :: tail | "-i" :: value :: tail =>
-                               nextOption(map ++ Map('input -> value.toInt), tail)
-        case "--output" :: value :: tail | "-o" :: value :: tail =>
-                               nextOption(map ++ Map('output -> value.toInt), tail)
+        case ("--input" | "-i")::value::tail =>
+                               parseOption(map ++ Map('input -> value), tail)
+        case ("--output" | "-o"):: value :: tail  =>
+                               parseOption(map ++ Map('output -> value), tail)
         case option :: tail => println("Unknown option "+option) 
                                exit(1) 
       }
     }
     
+    val options = parseOption(Map(),arglist)
+    val inputFile = options('input).toString
+    val outputFile = options('output).toString
+    
     // Create a Scala Spark Context.
     val conf = new SparkConf().setAppName("wordCount")
     val sc = new SparkContext(conf)
     
-    val inputFile = OptionMap("input")
-    val outputFile = OptionMap("output")
-
     // Load our input data.
     sc.textFile(inputFile)                        // Load file
       .flatMap(line => line.split(" "))           // Split up into words
