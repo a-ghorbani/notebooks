@@ -19,7 +19,6 @@ object Main {
     val arglist = args.toList
     type OptionMap = Map[Symbol, Any]
     def parseOption(map : OptionMap, list: List[String]) : OptionMap = {
-      def isSwitch(s : String) = (s(0) == '-')
       list match {
         case Nil => map
         case ("--input" | "-i")::value::tail =>
