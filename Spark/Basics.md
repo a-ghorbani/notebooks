@@ -15,7 +15,7 @@ object Main {
   def main(args: Array[String]) {
     
     // Parse arguments
-    if (args.length != 2) println(usage)
+    if (args.length != 4) println(usage)
     val arglist = args.toList
     type OptionMap = Map[Symbol, Any]
     def parseOption(map : OptionMap, list: List[String]) : OptionMap = {
