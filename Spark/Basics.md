@@ -48,3 +48,45 @@ object Main {
   }
 }
 ```
+
+# Resilient Distributed Datasets (RDD)
+
+can be created in three ways:
+
+* from an in-memory collection: `val myRDD = sc.parallelize(myScalaCollection, 10)` 
+* creating a reference to an external data: `val myRDD = sc.textFile(myFilePath, 10)`
+* transforming an existing RDD: `val myTransformedTDD = myRDD.map(myMapperFunction)`
+
+# Lazy evaluation
+
+No `transformation` is performed until an `action` operation.
+
+* a transformation generates an RDD
+* an action triggers computation on an RDD
+
+# Aggregation
+
+* `groupByKey()`: When called on a dataset of (K, V) pairs, returns a dataset of (K, Iterable<V>) pairs.  
+   Avoid `groupByKey()` if you are grouping in order to perform an aggregation.
+
+* `reduceByKey()`: input function should be commutative and associative, i.e. grouping and order should not matter. The results of aggregation has the same type of each elements of rdd.  
+   Example: `rdd.reduceByKey(_+_)`  
+
+* `foldByKey()`: same as `reduceByKey()` but accepts initial value (a natural zero).  
+   Example: `rdd.foldByKey(0)(_+_)`
+
+* `aggregateByKey()`: aggregate values for each key, and potentially can return different value type.  
+   Example: `rdd.aggregateByKey(new HashSet[Int])(_+=_, _++=_)`  
+   `new HashSet[Int]`: creates a new mutalbe set  
+   `_+=_`: adds a value to a `HashSet[Int]` for each partition   
+   `_++=_`: adds all the elements of the second set to the first one in each combiner in the map task.
+   
+* `combineByKey()`: is more general than `aggregateByKey`. It allows to define an initial lambda function to create the initial accumulator.  
+   Example:  
+   ```
+   rdd.combineByKey(HashSet[Int](_),  
+                     (aggr: HashSet[Int], value) => aggr+=value,  
+                     (aggr1: HashSet[Int], aggr2: HashSet[Int]) => aggr1++=aggr2)
+   ```
+   
+  
