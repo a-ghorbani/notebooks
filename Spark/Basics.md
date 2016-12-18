@@ -132,3 +132,55 @@ No `transformation` is performed until an `action` operation.
 
    // Array[(String, Double)] = Array((dep1,83333.33333333333), (dep2,110000.0))
    ```
+# Cache
+
+* `cache()` persists each partition of the RDD in the executor's memory.
+* If there is not enough memory for an executor the partition will be recomputed.
+* `persist()` allows different levels of persistence.
+  * `MEMORY_ONLY`: like `cache()`, most CPU-efficient option
+  * `MEMORY_ONLY_SER`: like `MEMORY_ONLY` + serialization
+  * `MEMORY_AND_DISK`: spills to disk if the RDD doesn't fit in memory. Use it if reading from disk is faster than recomputing the RDD.
+  * `MEMORY_AND_DISK_SER`: like `MEMORY_AND_DISK` + serialization.
+  * `DISK_ONLY`	Store the RDD partitions only on disk.
+  * `MEMORY_ONLY_2`, `MEMORY_AND_DISK_2`, etc.	Same as the levels above, but replicate each partition on two cluster nodes.
+  * `OFF_HEAP` (experimental) : Store RDD in serialized format in [Alluxio](http://www.alluxio.org/) (formerly Tachyon).
+
+* Spark automatically removes partitions in a least-recently-used (LRU) fashion.
+* or use `RDD.unpersist()` to remove manually.
+
+# Serialization
+
+* Java serialization: By default, Spark serializes objects using Java’s ObjectOutputStream framework, and can work with any class you create that implements java.io.Serializable. You can also control the performance of your serialization more closely by extending java.io.Externalizable.
+* Kryo serialization: Kryo is significantly faster and more compact than Java serialization (often as much as 10x), but does not support all Serializable types.
+
+# Shared Variables
+
+## Broadcast Variables
+
+Broadcast variables allows a read-only variable be cached on each executer rather than shipping a copy of it with tasks.
+Note that the broadcast variables cannot be updated.
+```
+val broadcastVar: Broadcast[Map[Int, String]] = sc.broadcast(Map(1 -> "a", 2-> "b", 3 -> "c"))
+
+val myRdd = sc.parallelize(Array(1,1,1,3,3,2), 2)
+val result = myRdd.map(broadcastVar.value(_))
+result.collect()
+
+// res91: Array[String] = Array(a, a, a, c, c, b)
+```
+
+## Accumulators
+
+An accumulators are shared variables that only can be add to through an associative operation.
+
+```
+val accum = sc.accumulator(0, "My Accumulator")
+sc.parallelize(1 to 100, 2).foreach(x => accum += x)
+
+accum
+// org.apache.spark.Accumulator[Int] = 5050
+```
+
+# Cluster
+
+http://spark.apache.org/docs/latest/cluster-overview.html
