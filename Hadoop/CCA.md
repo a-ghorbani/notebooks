@@ -2,6 +2,16 @@
 The skills to transfer data between external systems and your cluster. This includes the following:
 
 * Import data from a MySQL database into HDFS using Sqoop
+```
+> sqoop import --connect jdbc:mysql://host/db \
+               --table tablename \
+               --target-dir /path/to/db/ \
+               --username user --password pass \
+               [--fields-terminated-by ',' \ ]
+               [--as-avrodatafile | --as-parquetfile | --as-sequencefile | --as-textfile \]
+               [--direct -- -u **** -p"*********"]
+               
+```
 * Export data to a MySQL database from HDFS using Sqoop
 * Change the delimiter and file format of data during import using Sqoop
 * Ingest real-time and near-real-time streaming data into HDFS
