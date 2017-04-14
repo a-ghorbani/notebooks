@@ -15,23 +15,38 @@ The skills to transfer data between external systems and your cluster. This incl
   ```
   * Load data into Hive 
      * From Hadoop 
-     ```
-     > sqoop create-hive-table --connect jdbc:mysql://host/db \
-                               --table tablename \
-                               --username user --password pass \
-                               --fields-terminated-by ','
-                               
-     > beeline
-     beeline> !connect jdbc:hive2://host:10000 user pass
-     0: jdbc:hive2://host:10000> LOAD DATA INPATH "/path/to/file" INTO TABLE tablename; 
-     ```
-     * Directly from MySQL
+        * text format 
+         ```
+         > sqoop create-hive-table --connect jdbc:mysql://host/db \
+                                   --table tablename \
+                                   --username user --password pass \
+                                   --fields-terminated-by ','
+
+         > beeline
+         beeline> !connect jdbc:hive2://host:10000 user pass
+         0: jdbc:hive2://host:10000> LOAD DATA INPATH "/path/to/file" INTO TABLE tablename; 
+         ```
+         * avro format 
+         ```
+         > java -jar /opt/cloudera/parcels/CDH/jars/avro-tools-1.7.6-cdh5.8.0.jar \
+                 getschema hdfs://nm-host:8020/path/to/avro/node/part-m-00000.avro > tablename_avro.avsc
+         > hdfs dfs -put tablename_avro.avsc /path/to/schemas/
+
+         > beeline
+         beeline> !connect jdbc:hive2://host:10000 user pass
+         0: jdbc:hive2://host:10000> CREATE EXTERNAL TABLE test_avro STORED AS AVRO LOCATION '/path/to/avro/node' 
+         . . . . . . . . . . . . . > TBLPROPERTIES('avro.schema.url'='hdfs:///path/to/schemas/tablename_avro.avsc');
+         ```
+     * Directly from MySQL 
      ```
      > sqoop import --connect jdbc:mysql://host/db \
                     --hive-import \
                     --table tablename \
                     --username user --password pass 
                     [--split-by colname \]
+                    [--as-parquetfile \]
+                    [--hive-database databasename \]
+                    [--hive-table tablename \]
      ```
 * Export data to a MySQL database from HDFS using Sqoop
 * Change the delimiter and file format of data during import using Sqoop
