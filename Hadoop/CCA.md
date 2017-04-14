@@ -2,16 +2,37 @@
 The skills to transfer data between external systems and your cluster. This includes the following:
 
 * Import data from a MySQL database into HDFS using Sqoop
-```
-> sqoop import --connect jdbc:mysql://host/db \
-               --table tablename \
-               --target-dir /path/to/db/ \
-               --username user --password pass \
-               [--fields-terminated-by ',' \ ]
-               [--as-avrodatafile | --as-parquetfile | --as-sequencefile | --as-textfile \]
-               [--direct -- -u **** -p"*********"]
-               
-```
+  ```
+  > sqoop import --connect jdbc:mysql://host/db \
+                 --table tablename \
+                 --target-dir /path/to/db/ \
+                 --username user --password pass \
+                 [--fields-terminated-by ',' \ ]
+                 [--split-by colname \]
+                 [--as-avrodatafile | --as-parquetfile | --as-sequencefile | --as-textfile \]
+                 [--direct -- -u **** -p"*********"]
+
+  ```
+  * Load data into Hive 
+     * From Hadoop 
+     ```
+     > sqoop create-hive-table --connect jdbc:mysql://host/db \
+                               --table tablename \
+                               --username user --password pass \
+                               --fields-terminated-by ','
+                               
+     > beeline
+     beeline> !connect jdbc:hive2://host:10000 user pass
+     0: jdbc:hive2://host:10000> LOAD DATA INPATH "/path/to/file" INTO TABLE tablename; 
+     ```
+     * Directly from MySQL
+     ```
+     > sqoop import --connect jdbc:mysql://host/db \
+                    --hive-import \
+                    --table tablename \
+                    --username user --password pass 
+                    [--split-by colname \]
+     ```
 * Export data to a MySQL database from HDFS using Sqoop
 * Change the delimiter and file format of data during import using Sqoop
 * Ingest real-time and near-real-time streaming data into HDFS
