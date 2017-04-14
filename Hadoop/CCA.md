@@ -42,13 +42,29 @@ The skills to transfer data between external systems and your cluster. This incl
      > sqoop import --connect jdbc:mysql://host/db \
                     --hive-import \
                     --table tablename \
-                    --username user --password pass 
+                    --username user --password pass [\]
                     [--split-by colname \]
                     [--as-parquetfile \]
                     [--hive-database databasename \]
                     [--hive-table tablename \]
      ```
 * Export data to a MySQL database from HDFS using Sqoop
+  * export from HDFS to MySQL
+  ```
+  > sqoop export --connect jdbc:mysql://host/db \ 
+                 --table tablename \
+                 --username user --password pass \
+                 --export-dir /path/to/data [\]
+                 [--fields-terminated-by ',']
+  ```
+  * Export from Hive (specificly parquet format should be done this way)
+  ```
+  > sqoop export --connect jdbc:mysql://host/db \ 
+                 --table tablename
+                 --username user --password pass
+                 --hcatalog-database hive-database 
+                 --hcatalog-table hive-table
+  ```
 * Change the delimiter and file format of data during import using Sqoop
 * Ingest real-time and near-real-time streaming data into HDFS
 * Process streaming data as it is loaded onto the cluster
