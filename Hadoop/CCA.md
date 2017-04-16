@@ -66,7 +66,10 @@ The skills to transfer data between external systems and your cluster. This incl
                  --hcatalog-table hive-table
   ```
 * Change the delimiter and file format of data during import using Sqoop
+  * see the above commands
 * Ingest real-time and near-real-time streaming data into HDFS
+  * Flume
+    * Have a look [here](https://github.com/a-ghorbani/notebooks/blob/master/Hadoop/Flume.md)
 * Process streaming data as it is loaded onto the cluster
 * Load data into and out of HDFS using the Hadoop File System commands
 
