@@ -72,6 +72,9 @@ The skills to transfer data between external systems and your cluster. This incl
     * Have a look [here](https://github.com/a-ghorbani/notebooks/blob/master/Hadoop/Flume.md)
 * Process streaming data as it is loaded onto the cluster
 * Load data into and out of HDFS using the Hadoop File System commands
+  * hdfs dfs -get /user/hadoop/file localfile
+  * hdfs dfs -getmerge [-nl] /user/hadoop/dir localfile
+  * hdfs dfs -put localfile /user/hadoop/file
 
 # Transform, Stage, and Store
 Convert a set of data values in a given format stored in HDFS into new data values or a new data format and write them into HDFS.
