@@ -87,7 +87,7 @@ No `transformation` is performed until an `action` operation.
    // Array[(String, Int)] = Array((dep1,90000), (dep2,110000))
    ```
 
-* `foldByKey()`: same as `reduceByKey()` but accepts initial value (a natural zero).  
+* `foldByKey()`: same as `reduceByKey()` but accepts initial value (a natural zero) and in only makes sense if it is idempotent.  
    Example: `rdd.foldByKey(0)(_+_)`
    ```
    sc.parallelize(Seq(("dep1", 75000),("dep1", 90000),("dep2", 110000),("dep1", 85000)), 2)
