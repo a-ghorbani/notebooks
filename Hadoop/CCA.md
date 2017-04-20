@@ -116,10 +116,10 @@ Convert a set of data values in a given format stored in HDFS into new data valu
     > Limitations
     >  Because Spark is converting data types, keep the following in mind:
     >
-    >  Enumerated types are erased - Avro enumerated types become strings when they are read into Spark because Spark does not support enumerated types.
-    >  Unions on output - Spark writes everything as unions of the given type along with a null option.
-    >  Avro schema changes - Spark reads everything into an internal representation. Even if you just read and then write the data, the schema for the output is different.
-    >  Spark schema reordering - Spark reorders the elements in its schema when writing them to disk so that the elements being partitioned on are the last elements. For an example, see Writing Partitioned Data.
+    >  * Enumerated types are erased - Avro enumerated types become strings when they are read into Spark because Spark does not support enumerated types.
+    >  * Unions on output - Spark writes everything as unions of the given type along with a null option.
+    >  * Avro schema changes - Spark reads everything into an internal representation. Even if you just read and then write the data, the schema for the output is different.
+    >  * Spark schema reordering - Spark reorders the elements in its schema when writing them to disk so that the elements being partitioned on are the last elements. For an example, see Writing Partitioned Data.
     
 * Perform standard extract, transform, load (ETL) processes on data
 
