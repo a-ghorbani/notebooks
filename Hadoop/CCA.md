@@ -79,8 +79,48 @@ The skills to transfer data between external systems and your cluster. This incl
 # Transform, Stage, and Store
 Convert a set of data values in a given format stored in HDFS into new data values or a new data format and write them into HDFS.
 * Load RDD data from HDFS for use in Spark applications
+  ```
+  sc.textFile("/user/path/to/file")
+  ```
 * Write the results from an RDD back into HDFS using Spark
+  ```
+  myRDD.saveAsTextFile("/user/path/to/file"
+  ```
 * Read and write files in a variety of file formats
+  * squenceFile
+  ```
+  sc.sequenceFile("/user/path/to/file")
+  myRDD.saveAsSequenceFile("/user/path/to/file")
+  ```
+  * ORC
+  ```
+  myRDD.toDF().write.orc("/user/path/to/ORCfile")
+  sqlContext.read.orc("/user/path/to/ORCfile")
+  ```
+  * JSON
+  ```
+  myRDD.toDF().write.json("/user/path/to/JSONfile")
+  sqlContext.read.json("/user/path/to/JSONfile")
+  ```
+  * parquet
+  ```
+  myRDD.toDF().write.parquet("/user/path/to/parquetfile")
+  sqlContext.read.parquet("/user/path/to/parquetfile")
+  ```
+  * Avro
+  ```
+  import com.databricks.spark.avro._
+  myRDD.toDF().write.avro("/user/path/to/Avrofile")
+  sqlContext.read.avro("/user/path/to/Avrofile")
+  ```
+    > Limitations
+    >  Because Spark is converting data types, keep the following in mind:
+    >
+    >  Enumerated types are erased - Avro enumerated types become strings when they are read into Spark because Spark does not support enumerated types.
+    >  Unions on output - Spark writes everything as unions of the given type along with a null option.
+    >  Avro schema changes - Spark reads everything into an internal representation. Even if you just read and then write the data, the schema for the output is different.
+    >  Spark schema reordering - Spark reorders the elements in its schema when writing them to disk so that the elements being partitioned on are the last elements. For an example, see Writing Partitioned Data.
+    
 * Perform standard extract, transform, load (ETL) processes on data
 
 # Data Analysis
