@@ -113,7 +113,8 @@ Convert a set of data values in a given format stored in HDFS into new data valu
   myRDD.toDF().write.avro("/user/path/to/Avrofile")
   sqlContext.read.avro("/user/path/to/Avrofile")
   ```
-    > Limitations
+    > **Limitations** 
+    >
     >  Because Spark is converting data types, keep the following in mind:
     >
     >  * Enumerated types are erased - Avro enumerated types become strings when they are read into Spark because Spark does not support enumerated types.
